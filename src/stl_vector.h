@@ -12,7 +12,7 @@ class vector_base {
 
 public:
 	typedef Alloc allocator_type;
-	allocator_type get_allocator()const { return allocator_type(); }
+	inline allocator_type get_allocator()const { return allocator_type(); }
 	vector_base(const Alloc&):m_start(nullptr), m_finish(nullptr), m_end_of_storage(nullptr) {}
 	vector_base(size_t n, const Alloc&) :m_start(nullptr), m_finish(nullptr), m_end_of_storage(nullptr) {
 		m_start = m_allocator(n);
@@ -22,10 +22,10 @@ public:
 	~vector_base() { m_deallocator(m_start, m_end_of_storage - m_start); }
 
 protected:
-	typedef SimpleAlloc<Tp, Alloc> m_data_allocator;
+	inline typedef SimpleAlloc<Tp, Alloc> m_data_allocator;
 	Tp* m_allocator(size_t n) {
 		return m_data_allocator::allocate(n);}
-	void m_deallocator(Tp* p, size_t n) {
+	inline void m_deallocator(Tp* p, size_t n) {
 		m_data_allocator::deallocate(p, n);}
 
 protected:
@@ -56,7 +56,7 @@ public:
 	typedef ptrdiff_t difference_type;
 	typedef Base::allocator_type allocator_type;
 
-	allocator_type get_allocator()const { return Base::get_allocator(); }
+	inline allocator_type get_allocator()const { return Base::get_allocator(); }
 
 	typedef ReverseIter<iterator, value_type, reference, difference_type> reverse_iterator;
 	typedef ReverseIter<const_iterator, value_type, const_reference, difference_type> const_reverse_iterator;
@@ -80,23 +80,23 @@ public:
 		destroy(m_start, m_finish);
 	}
 
-	iterator begin() { return m_start; }
-	iterator begin()const { return m_start; }
-	iterator end() { return m_finish; }
-	iterator end()const { return m_finish; }
-	reverse_iterator rbegin() { return reverse_iterator(end()); }
-	const_reverse_iterator rbegin()const { return const_reverse_iterator(end()); }
-	reverse_iterator rend() { return reverse_iterator(begin()); }
-	const_reverse_iterator rend()const { return const_reverse_iterator(begin()); }
+	inline iterator begin() { return m_start; }
+	inline iterator begin()const { return m_start; }
+	inline iterator end() { return m_finish; }
+	inline iterator end()const { return m_finish; }
+	inline reverse_iterator rbegin() { return reverse_iterator(end()); }
+	inline const_reverse_iterator rbegin()const { return const_reverse_iterator(end()); }
+	inline reverse_iterator rend() { return reverse_iterator(begin()); }
+	inline const_reverse_iterator rend()const { return const_reverse_iterator(begin()); }
 
-	size_type size()const { return size_type(end() - begin()); }
-	size_type max_size()const { return size_type(-1) / sizeof(Tp); }
-	size_type capacity()const { return m_end_of_storage - begin(); }
-	bool empty()const { return begin() == end(); }
-	reference front() { return*begin(); }
-	const_reference front()const { return *begin(); }
-	reference back() { return *end(); }
-	const_reference back()const { return*end(); }
+	inline size_type size()const { return size_type(end() - begin()); }
+	inline size_type max_size()const { return size_type(-1) / sizeof(Tp); }
+	inline size_type capacity()const { return m_end_of_storage - begin(); }
+	inline bool empty()const { return begin() == end(); }
+	inline reference front() { return*begin(); }
+	inline const_reference front()const { return *begin(); }
+	inline reference back() { return *end(); }
+	inline const_reference back()const { return*end(); }
 
 	void push_back(const Tp& x) {
 		if (m_finish != m_end_of_storage) {
@@ -219,8 +219,8 @@ public:
 	}
 
 	// override
-	reference operator[](size_type n) { return *(begin() + n); }
-	const_reference operator[](size_type n)const { return *(begin() + n); }
+	inline reference operator[](size_type n) { return *(begin() + n); }
+	inline const_reference operator[](size_type n)const { return *(begin() + n); }
 	vector& operator=(const vector<Tp, Alloc>&x) {
 		if (&x == this) return*this;
 		const size_type len = x.size();
@@ -255,7 +255,7 @@ public:
 		m_finish = tmp + old;
 		m_end_of_storage = tmp + n;
 	}
-	void clear() { erase(begin(), end()); }
+	inline void clear() { erase(begin(), end()); }
 
 protected:
 	iterator allocate_and_copy(size_type n, const_iterator first, const_iterator last) {
