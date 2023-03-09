@@ -118,7 +118,7 @@ template<typename Tp, typename Distance>
 inline Tp* _copy_backward(Tp* first, Tp* last, Tp* result,
 	       random_access_iterator_tag, Distance*) {
 	const ptrdiff_t num = last - first;
-	memmove(result - num, first, num * sizeof(Tp));
+	::memmove(result - num, first, num * sizeof(Tp));
 	return result - num;
 }
 
@@ -126,7 +126,7 @@ template<typename Tp, typename Distance>
 inline Tp* _copy_backward(const Tp* first, const Tp* last, Tp* result,
 	random_access_iterator_tag, Distance*) {
 	const ptrdiff_t num = last - first;
-	memmove(result - num, first, num * sizeof(Tp));
+	::memmove(result - num, first, num * sizeof(Tp));
 	return result - num;
 }
 
