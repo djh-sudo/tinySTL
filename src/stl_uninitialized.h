@@ -42,9 +42,16 @@ uninitialized_copy(InputIter first, InputIter last, ForwardIter result) {
 // specialized
 inline char* uninitialized_copy(const char* first, const char* last, 
 	                            char* result) {
-	::memmove(result, first, last - first);
+	::memmove(result, first, (size_t)(last - first));
 	return result + (last - first);
 }
+
+inline int* uninitialized_copy(const int* first, const int* last,
+	                            int* result) {
+	::memmove(result, first, (size_t)(last - first));
+	return result + (last - first);
+}
+
 // copy_n
 template<typename InputIter, typename Size, typename ForwardIter>
 pair<InputIter,ForwardIter>
