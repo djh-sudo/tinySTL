@@ -82,8 +82,9 @@ struct list_iterator :public list_iterator_base {
 	}
 };
 
+template<typename Tp, typename Ref, typename Ptr>
 inline bidirectional_iterator_tag
-iterator_category(const list_iterator_base&) {
+iterator_category(const list_iterator<Tp,Ref,Ptr>&) {
 	return bidirectional_iterator_tag(); }
 
 template<typename Tp, typename Ref,typename Ptr>
