@@ -278,13 +278,13 @@ public:
 	inline const_reference operator[](size_type n)const { return m_start[difference_type(n)]; }
 
 	inline reference front() { return *m_start; }
-	reference back() {
+	inline reference back() {
 		iterator tmp = m_finish;
 		--tmp;
 		return*tmp;
 	}
 	inline const_reference front()const { return *m_start; }
-	const_reference back()const {
+	inline const_reference back()const {
 		const_iterator tmp = m_finish;
 		--tmp;
 		return*tmp;
@@ -472,28 +472,28 @@ protected:
 		uninitialized_fill(m_finish.first, m_finish.cur, value);
 	}
 	
-	void push_back_aux(const value_type& x) {
+	inline void push_back_aux(const value_type& x) {
 		reserve_map_at_back();
 		*(m_finish.m_node + 1) = allocate_node();
 		construct(m_finish.m_cur, x);
 		m_finish.set_node(m_finish.m_node + 1);
 		m_finish.m_cur = m_finish.m_first;
 	}
-	void push_back_aux() {
+	inline void push_back_aux() {
 		reserve_map_at_back();
 		*(m_finish.m_node + 1) = allocate_node();
 		construct(m_finish.m_cur);
 		m_finish.set_node(m_finish.m_node + 1);
 		m_finish.m_cur = m_finish.m_first;
 	}
-	void push_front_aux(const value_type&x) {
+	inline void push_front_aux(const value_type&x) {
 		reserve_map_at_front();
 		*(m_start.m_node - 1) = allocate_node();
 		m_start.set_node(m_start.m_node - 1);
 		m_start.m_cur = m_start.m_last - 1;
 		construct(m_start.m_cur, x);
 	}
-	void push_front_aux() {
+	inline void push_front_aux() {
 		reserve_map_at_front();
 		*(m_start.m_node - 1) = allocate_node();
 		m_start.set_node(m_start.m_node - 1);
@@ -501,13 +501,13 @@ protected:
 		construct(m_start.m_cur);
 	}
 	
-	void pop_back_aux() {
+	inline void pop_back_aux() {
 		deallocate_node(m_finish.m_first);
 		m_finish.set_node(m_finish.m_node - 1);
 		m_finish.m_cur = m_finish.m_last - 1;
 		destroy(m_finish.m_cur);
 	}
-	void pop_front_aux() {
+	inline void pop_front_aux() {
 		destroy(m_start.m_cur);
 		deallocate_node(m_start.m_first);
 		m_start.set_node(m_start.m_node + 1);
@@ -783,6 +783,4 @@ inline bool operator<(const deque<Tp, Alloc>& x,
 }
 
 NAMESPACE_END
-
-
 #endif	
