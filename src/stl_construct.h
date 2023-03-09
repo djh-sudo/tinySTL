@@ -14,6 +14,21 @@ namespace stl {
 	inline void Construct(T1* p) {
 		new ((void*)p) T1();
 	}
+	// special 
+	inline void Construct(int* p) {}
+	inline void Construct(unsigned int* p) {}
+	inline void Construct(char* p) {}
+	inline void Construct(unsigned char* p) {}
+	inline void Construct(double* p) {}
+	inline void Construct(float* p) {}
+	inline void Construct(long* p) {}
+
+	inline void Construct(int* p, const int value) { *p = value; }
+	inline void Construct(unsigned int* p, const unsigned int value) { *p = value; }
+	inline void Construct(char* p, const char value) { *p = value; }
+	inline void Construct(unsigned char* p, const unsigned char value) { *p = value; }
+	inline void Construct(float* p, const float value) { *p = value; }
+	inline void Construct(double* p, const double value) { *p = value; }
 
 	template<typename T1>
 	inline void Destroy(T1* p) {
@@ -28,7 +43,7 @@ namespace stl {
 	}
 
 	template<class ForwardIterator>
-	inline void _destroy_aux(ForwardIterator f, ForwardIterator l, _true_type) {}
+	inline void destroy_aux(ForwardIterator f, ForwardIterator l, _true_type) {}
 
 
 	template<typename ForwardIterator, typename Tp>
@@ -50,7 +65,7 @@ namespace stl {
 	inline void Destroy(double*, double*) {}
 
 	template<typename T1, typename T2>
-	inline void construct(T1* p, const T2 value) {
+	inline void construct(T1* p, const T2& value) {
 		Construct(p, value);
 	}
 

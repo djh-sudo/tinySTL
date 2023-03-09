@@ -22,7 +22,7 @@ public:
 	~vector_base() { m_deallocator(m_start, m_end_of_storage - m_start); }
 
 protected:
-	inline typedef SimpleAlloc<Tp, Alloc> m_data_allocator;
+	typedef SimpleAlloc<Tp, Alloc> m_data_allocator;
 	Tp* m_allocator(size_t n) {
 		return m_data_allocator::allocate(n);}
 	inline void m_deallocator(Tp* p, size_t n) {
@@ -329,21 +329,20 @@ protected:
 	void fill_insert(iterator pos, size_type n, const Tp& x) {
 		if (n == 0) return;
 		if (size_type(m_end_of_storage - m_finish) > n) {
-			Tp x_copy = x;
 			const size_type ele_after = m_finish - pos;
 			iterator old = m_finish;
 			if (ele_after > n) {
 				uninitialized_copy(m_finish - n, m_finish, m_finish);
 				m_finish += n;
 				copy_backward(pos, old - n, old);
-				fill(pos, pos + n, x_copy);
+				fill(pos, pos + n, x);
 			}
 			else {
-				uninitialized_fill_n(m_finish, n - ele_after, x_copy);
+				uninitialized_fill_n(m_finish, n - ele_after, x);
 				m_finish += (n - ele_after);
 				uninitialized_copy(pos, old, m_finish);
 				m_finish += ele_after;
-				fill(pos, old, x_copy);
+				fill(pos, old, x);
 			}
 		}
 		else {
