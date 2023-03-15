@@ -280,7 +280,7 @@ public:
 		size_type n = bucket_num_key(key);
 		Node* first = nullptr;
 		for (first = m_buckets[n]; 
-			 first && m_equal(m_get_key(first->m_val), key);
+			 first && !m_equal(m_get_key(first->m_val), key);
 			 first = first->m_next);
 		return iterator(first, this);
 	}
@@ -288,7 +288,7 @@ public:
 		size_type n = bucket_num_key(key);
 		Node* first = nullptr;
 		for (first = m_buckets[n];
-			 first && m_equal(m_get_key(first->m_val), key);
+			 first && !m_equal(m_get_key(first->m_val), key);
 			 first = first->m_next);
 		return const_iterator(first, this);
 	}
