@@ -23,7 +23,7 @@ _uninitialized_copy_aux(InputIter first, InputIter last,
 	                    ForwardIter result, _false_type) {
 	ForwardIter cur = result;
 	for (; first != last; ++first, ++cur) {
-		Construct(&(*cur), &(*first));
+		Construct(&(*cur), (*first));
 	}
 	return cur;
 }
