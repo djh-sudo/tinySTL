@@ -136,6 +136,7 @@
     <ClInclude Include="stl_hashtable.h" />
     <ClInclude Include="stl_hash_fun.h" />
     <ClInclude Include="stl_hash_map.h" />
+    <ClInclude Include="stl_hash_set.h" />
     <ClInclude Include="stl_iterator.h" />
     <ClInclude Include="stl_iterator_base.h" />
     <ClInclude Include="stl_list.h" />

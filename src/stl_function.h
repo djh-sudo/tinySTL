@@ -45,5 +45,10 @@ struct equal_to :public binary_function<Tp, Tp, bool> {
  struct Select1st :public unary_function<Pair,typename Pair::first_type> {
 	 const typename Pair::first_type& operator()(const Pair& x)const { return x.first; }
  };
+
+template<typename Tp>
+struct Identity :public unary_function<Tp, Tp> {
+	const Tp& operator()(const Tp& x)const { return x; }
+};
 NAMESPACE_END // STL_FUNCTION_H
 #endif
