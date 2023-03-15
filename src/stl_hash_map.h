@@ -40,6 +40,8 @@ public:
 	inline hasher hash_func()const { return m_ht.hash_fun(); }
 	inline key_equal key_eq()const { return m_ht.key_eq(); }
 	inline allocator_type get_allocator()const { return m_ht.get_allocator(); }
+	friend bool operator==(const hash_map&, const hash_map&);
+	friend bool operator!=(const hash_map&, const hash_map&);
 
 public:
 	hash_map() :m_ht(100, hasher(), key_equal(), allocator_type()) {}
@@ -115,11 +117,17 @@ public:
 	inline size_type max_bucket_count()const { return m_ht.max_bucket_count(); }
 	inline size_type ele_in_bucket(size_type n)const { return m_ht.ele_in_bucket(); }
 };
-// override operator
+// overload operator
 template<typename Key, typename Tp, typename HashFun, typename EqualKey, typename Alloc>
 inline bool operator==(const hash_map<Key, Tp, HashFun, EqualKey, Alloc>&x,
 	                   const hash_map<Key, Tp, HashFun, EqualKey, Alloc>&y){
 	return x.m_ht == y.m_ht;
+}
+
+template<typename Key, typename Tp, typename HashFun, typename EqualKey, typename Alloc>
+inline bool operator!=(const hash_map<Key, Tp, HashFun, EqualKey, Alloc>& x,
+	const hash_map<Key, Tp, HashFun, EqualKey, Alloc>& y) {
+	return x.m_ht != y.m_ht;
 }
 
 // multimap
@@ -151,6 +159,9 @@ public:
 	inline hasher hash_func()const { return m_ht.hash_fun(); }
 	inline key_equal key_eq()const { return m_ht.key_eq(); }
 	inline allocator_type get_allocator()const { return m_ht.get_allocator(); }
+	friend bool operator==(const hash_multimap&, const hash_multimap&);
+	friend bool operator!=(const hash_multimap&, const hash_multimap&);
+
 public:
 	hash_multimap() :m_ht(100, hasher(), key_equal(), allocator_type()) {}
 	explicit hash_multimap(size_type n) :m_ht(n, hasher(), key_equal(), allocator_type()) {}
