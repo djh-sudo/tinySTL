@@ -117,7 +117,7 @@ private:
 
 	static char* chunk_alloc(size_t size, int& njobs) {
 		size_t total_bytes = size * njobs;
-		size_t left_bytes = m_end_free - m_start_free;
+		size_t left_bytes = size_t(m_end_free - m_start_free);
 		if (left_bytes >= total_bytes) {
 			// the pool capacity is enough!
 			char* result = m_start_free;

@@ -19,7 +19,7 @@ public:
 		m_finish = m_start;
 		m_end_of_storage = m_start + n;
 	}
-	~vector_base() { m_deallocator(m_start, m_end_of_storage - m_start); }
+	~vector_base() { m_deallocator(m_start, size_t(m_end_of_storage - m_start)); }
 
 protected:
 	typedef SimpleAlloc<Tp, Alloc> m_data_allocator;
@@ -77,8 +77,7 @@ public:
 	}
 
 	~vector() { 
-		destroy(m_start, m_finish);
-	}
+		destroy(m_start, m_finish); }
 
 	inline iterator begin() { return m_start; }
 	inline iterator begin()const { return m_start; }
@@ -91,14 +90,14 @@ public:
 
 	inline size_type size()const { return size_type(end() - begin()); }
 	inline size_type max_size()const { return size_type(-1) / sizeof(Tp); }
-	inline size_type capacity()const { return m_end_of_storage - begin(); }
+	inline size_type capacity()const { return size_type(m_end_of_storage - m_start); }
 	inline bool empty()const { return begin() == end(); }
 	inline reference front() { return*begin(); }
 	inline const_reference front()const { return *begin(); }
 	inline reference back() { return *end(); }
 	inline const_reference back()const { return*end(); }
 
-	void push_back(const Tp& x) {
+	inline void push_back(const Tp& x) {
 		if (m_finish != m_end_of_storage) {
 			construct(m_finish, x);
 			++m_finish;
@@ -107,7 +106,7 @@ public:
 			insert_aux(end(), x);
 		}
 	}
-	void push_back() {
+	inline void push_back() {
 		if (m_finish != m_end_of_storage) {
 			construct(m_finish);
 			++m_finish;
@@ -117,7 +116,7 @@ public:
 		}
 	}
 	void push_front(const Tp& x) = delete;
-	void pop_back() {
+	inline void pop_back() {
 		--m_finish;
 		destroy(m_finish);
 	}
@@ -157,7 +156,7 @@ public:
 		size_type n = 0;
 		distance(first, last, n);
 		if (size_type(m_end_of_storage - m_finish) >= n) {
-			const size_type ele_after = m_finish - pos;
+			const size_type ele_after = size_type(m_finish - pos);
 			iterator old = m_finish;
 			if (ele_after > n) {
 				uninitialized_copy(m_finish - n, m_finish, m_finish);
@@ -245,12 +244,12 @@ public:
 		m_finish = m_start + len;
 		return*this;
 	}
-	void reserve(size_type n) {
+	void reserve(const size_type n) {
 		if (capacity() >= n)return;
 		const size_type old = size();
 		iterator tmp = allocate_and_copy(n, m_start, m_finish);
 		destroy(m_start, m_finish);
-		m_deallocator(m_start, m_end_of_storage - m_start);
+		m_deallocator(m_start, (size_t)(m_end_of_storage - m_start));
 		m_start = tmp;
 		m_finish = tmp + old;
 		m_end_of_storage = tmp + n;
@@ -329,7 +328,7 @@ protected:
 	void fill_insert(iterator pos, size_type n, const Tp& x) {
 		if (n == 0) return;
 		if (size_type(m_end_of_storage - m_finish) > n) {
-			const size_type ele_after = m_finish - pos;
+			const size_type ele_after = size_type(m_finish - pos);
 			iterator old = m_finish;
 			if (ele_after > n) {
 				uninitialized_copy(m_finish - n, m_finish, m_finish);
@@ -356,7 +355,7 @@ protected:
 			new_finish = uninitialized_copy(pos, m_finish, new_finish);
 			// free the previous block
 			destroy(m_start, m_finish);
-			m_deallocator(m_start, m_end_of_storage - m_start);
+			m_deallocator(m_start, (size_type)(m_end_of_storage - m_start));
 			m_start = new_start;
 			m_finish = new_finish;
 			m_end_of_storage = new_start + len;

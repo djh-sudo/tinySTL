@@ -13,7 +13,8 @@ struct pair {
 	T2 second;
 	pair() :first(T1()), second(T2()) {}
 	pair(const T1& a, const T2& b) :first(a), second(b) {}
-
+	template<typename U1,typename U2>
+	pair(const pair<U1,U2>&p):first(p.first), second(p.second) {}
 };
 // override
 template<typename T1, typename T2>

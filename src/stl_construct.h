@@ -3,7 +3,8 @@
 #include <new.h>
 #include "stl_iterator_base.h"
 #include "type_traits.h"
-
+#pragma warning (disable:4514)
+#pragma warning (disable:4100)
 namespace stl {
 	template<typename T1, typename T2>
 	inline void Construct(T1* p, const T2& value) {

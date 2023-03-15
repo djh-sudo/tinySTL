@@ -189,11 +189,11 @@ OutputIter fill_n(OutputIter first, Size n, Tp& x) {
 }
 // specialization
 inline void fill(unsigned char* first, unsigned char* last, const unsigned char c) {
-	::memset(first, c, last - first);
+	::memset(first, c, (size_t)(last - first));
 }
 
 inline void fill(char* first, char* last, const char c) {
-	::memset(first, (unsigned char)c, last - first);
+	::memset(first, (unsigned char)c, (size_t)(last - first));
 }
 
 template<typename Size>
@@ -266,8 +266,8 @@ inline bool lexigraphical_compare(const unsigned char* first1,
 	                              const unsigned char* last1,
 	                              const unsigned char* first2,
 	                              const unsigned char* last2){
-	const size_t len1 = last1 - first1;
-	const size_t len2 = last2 - first2;
+	const size_t len1 = size_t(last1 - first1);
+	const size_t len2 = size_t(last2 - first2);
 	const int result = ::memcmp(first1, first2, min(len1, len2));
 	return result != 0 ? result < 0 : len1 < len2;
 }
