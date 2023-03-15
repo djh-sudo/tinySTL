@@ -132,6 +132,10 @@
     <ClInclude Include="stl_config.h" />
     <ClInclude Include="stl_construct.h" />
     <ClInclude Include="stl_deque.h" />
+    <ClInclude Include="stl_function.h" />
+    <ClInclude Include="stl_hashtable.h" />
+    <ClInclude Include="stl_hash_fun.h" />
+    <ClInclude Include="stl_hash_map.h" />
     <ClInclude Include="stl_iterator.h" />
     <ClInclude Include="stl_iterator_base.h" />
     <ClInclude Include="stl_list.h" />
