@@ -6,7 +6,7 @@
 
 namespace stl {
 	template<typename T1, typename T2>
-	inline void Construct(T1* p, const T2 value) {
+	inline void Construct(T1* p, const T2& value) {
 		new ((void*)p) T1(value);
 	}
 
@@ -30,9 +30,24 @@ namespace stl {
 	inline void Construct(float* p, const float value) { *p = value; }
 	inline void Construct(double* p, const double value) { *p = value; }
 
+	template<typename T1, typename T2>
+	inline void construct(T1* p, const T2& value) {
+		Construct(p, value);
+	}
+
+	template<typename T1>
+	inline void construct(T1* p) {
+		Construct(p);
+	}
+
 	template<typename T1>
 	inline void Destroy(T1* p) {
 		p->~T1();
+	}
+
+	template<typename Tp>
+	inline void destroy(Tp* p) {
+		Destroy(p);
 	}
 
 	template<typename ForwardIterator>
@@ -57,28 +72,13 @@ namespace stl {
 	inline void Destroy(ForwardIterator first, ForwardIterator last) {
 		_destroy(first, last, VALUE_TYPE(first));
 	}
- 
+
 	inline void Destroy(char*, char*) {}
 	inline void Destroy(int*, int*) {}
 	inline void Destroy(long*, long*) {}
 	inline void Destroy(float*, float*) {}
 	inline void Destroy(double*, double*) {}
-
-	template<typename T1, typename T2>
-	inline void construct(T1* p, const T2& value) {
-		Construct(p, value);
-	}
-
-	template<typename T1>
-	inline void construct(T1* p) {
-		Construct(p);
-	}
-
-	template<typename Tp>
-	inline void destroy(Tp* p) {
-		Destroy(p);
-	}
-
+ 
 	template<typename ForwardIterator>
 	inline void destroy(ForwardIterator first, ForwardIterator last) {
 		Destroy(first, last);
