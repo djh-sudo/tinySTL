@@ -240,13 +240,13 @@ public:
 // overload operator
 template<typename Val, typename HashFunc, typename EqualKey, typename Alloc>
 bool operator==(const hash_multiset<Val, HashFunc, EqualKey, Alloc>& x,
-	            const hash_set<Val, HashFunc, EqualKey, Alloc>& y) {
+	            const hash_multiset<Val, HashFunc, EqualKey, Alloc>& y) {
 	return x.m_ht == y.m_ht;
 }
 
 template<typename Val, typename HashFunc, typename EqualKey, typename Alloc>
 bool operator!=(const hash_multiset<Val, HashFunc, EqualKey, Alloc>& x,
-	            const hash_set<Val, HashFunc, EqualKey, Alloc>& y) {
+	            const hash_multiset<Val, HashFunc, EqualKey, Alloc>& y) {
 	return !(x.m_ht == y.m_ht);
 }
 NAMESPACE_END
