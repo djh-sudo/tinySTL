@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="multimap.h" />
     <ClInclude Include="stl_algobase.h" />
     <ClInclude Include="stl_alloc.h" />
     <ClInclude Include="stl_config.h" />
@@ -140,6 +141,8 @@
     <ClInclude Include="stl_iterator.h" />
     <ClInclude Include="stl_iterator_base.h" />
     <ClInclude Include="stl_list.h" />
+    <ClInclude Include="stl_map.h" />
+    <ClInclude Include="stl_multiset.h" />
     <ClInclude Include="stl_pair.h" />
     <ClInclude Include="stl_queue.h" />
     <ClInclude Include="stl_set.h" />
