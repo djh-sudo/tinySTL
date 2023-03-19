@@ -72,6 +72,12 @@
     <ClInclude Include="stl_hash_set.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="stl_tree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stl_set.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
