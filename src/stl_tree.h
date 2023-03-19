@@ -602,9 +602,9 @@ public:
 			if (!m_key_compare(KeyOfValue()(v), m_key(before.m_node)) &&
 				!m_key_compare(m_key(pos.m_node), KeyOfValue()(v))) {
 				if (m_right(before.m_node) == nullptr)
-					return insert_equal(nullptr, before.m_node, v);
+					return insert(nullptr, before.m_node, v);
 				else
-					return insert_equal(pos.m_node, pos.m_node, v);
+					return insert(pos.m_node, pos.m_node, v);
 			}
 			else
 				return insert_equal(v);
