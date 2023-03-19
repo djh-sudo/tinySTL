@@ -504,7 +504,7 @@ public:
 	inline Compare key_cmp()const { return m_key_compare; }
 	inline iterator begin() { return m_left_most(); }
 	inline const_iterator begin()const { return m_left_most(); }
-	inline iterator end() { return m_header(); }
+	inline iterator end() { return m_header; }
 	inline const_iterator end()const { return m_header; }
 	inline reverse_iterator rbegin() { return reverse_iterator(end()); }
 	inline const_reverse_iterator rbegin()const { return const_reverse_iterator(end()); }
@@ -569,8 +569,8 @@ public:
 		else {
 			iterator before = pos;
 			--before;
-			if(m_key_compare(m_key(before.m_node), KeyOfValue(v)) &&
-				m_key_compare(KeyOfValue(v), m_key(pos.m_node))) {
+			if(m_key_compare(m_key(before.m_node), KeyOfValue()(v)) &&
+				m_key_compare(KeyOfValue()(v), m_key(pos.m_node))) {
 				if (m_right(before.m_node) == nullptr)
 					return insert(nullptr, before.m_node, v);
 				else
@@ -599,8 +599,8 @@ public:
 		else {
 			iterator before = pos;
 			--before;
-			if (!m_key_compare(KeyOfValue(v), m_key(before.m_node)) &&
-				!m_key_compare(m_key(pos.m_node), KeyOfValue(v))) {
+			if (!m_key_compare(KeyOfValue()(v), m_key(before.m_node)) &&
+				!m_key_compare(m_key(pos.m_node), KeyOfValue()(v))) {
 				if (m_right(before.m_node) == nullptr)
 					return insert_equal(nullptr, before.m_node, v);
 				else
