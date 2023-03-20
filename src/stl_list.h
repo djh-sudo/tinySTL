@@ -320,7 +320,6 @@ protected:
 
 public:
 	inline void assign(size_type n, const Tp& value) { return fill_assign(n, value); }
-	template<typename InputIter>
 	
 protected:
 	inline void transfer(iterator pos, iterator first, iterator last) {
