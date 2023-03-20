@@ -264,7 +264,7 @@ rebalence_for_erase(RB_Tree_Node_Base* z,
 			else
 				z->m_parent->m_right = y;
 			y->m_parent = z->m_parent;
-			std::swap(y->m_color, z->m_color);
+			stl::swap(y->m_color, z->m_color);
 			y = z;
 		}
 	}
@@ -515,9 +515,9 @@ public:
 	inline size_type size()const { return m_node_count; }
 	inline size_type max_size()const { return size_type(-1); }
 	inline void swap(RB_Tree& x) {
-		std::swap(m_header, x.m_header);
-		std::swap(m_node_count, x.m_node_count);
-		std::swap(m_key_compare, x.m_key_compare);
+		stl::swap(m_header, x.m_header);
+		stl::swap(m_node_count, x.m_node_count);
+		stl::swap(m_key_compare, x.m_key_compare);
 	}
 
 public:

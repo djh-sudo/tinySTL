@@ -259,10 +259,10 @@ public:
 		}
 	}
 	inline void swap(deque& x) {
-		std::swap(m_start, x.m_start);
-		std::swap(m_finish, x.m_finish);
-		std::swap(m_map, x.m_map);
-		std::swap(m_map_size, m_map_size);
+		stl::swap(m_start, x.m_start);
+		stl::swap(m_finish, x.m_finish);
+		stl::swap(m_map, x.m_map);
+		stl::swap(m_map_size, m_map_size);
 	}
 
 	inline iterator begin() { return m_start; }

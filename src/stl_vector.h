@@ -123,9 +123,9 @@ public:
 	void pop_front() = delete;
 
 	void swap(vector<Tp, Alloc>& x) {
-		std::swap(m_start, x.m_start);
-		std::swap(m_finish, x.m_finish);
-		std::swap(m_end_of_storage, x.m_end_of_storage);
+		stl::swap(m_start, x.m_start);
+		stl::swap(m_finish, x.m_finish);
+		stl::swap(m_end_of_storage, x.m_end_of_storage);
 	}
 	
 	iterator insert(iterator pos, const Tp& value) {

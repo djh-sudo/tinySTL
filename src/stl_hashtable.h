@@ -220,11 +220,11 @@ public:
 	inline size_type max_size()const { return size_type(-1); }
 	inline bool empty()const { return m_num_ele == 0; }
 	inline void swap(const hashtable& ht) {
-		std::swap(m_hash, ht.m_hash);
-		std::swap(m_equal, ht.m_equal);
-		std::swap(m_get_key, ht.m_get_key);
+		stl::swap(m_hash, ht.m_hash);
+		stl::swap(m_equal, ht.m_equal);
+		stl::swap(m_get_key, ht.m_get_key);
 		m_buckets.swap(ht.m_buckets);
-		std::swap(m_num_ele, ht.m_num_ele);
+		stl::swap(m_num_ele, ht.m_num_ele);
 	}
 	
 	iterator begin() {

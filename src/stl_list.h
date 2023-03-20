@@ -2,6 +2,7 @@
 #define STL_LIST_H
 
 #include "stl_config.h"
+#include "stl_algobase.h"
 #include "stl_alloc.h"
 #include "stl_iterator.h"
 #include "stl_construct.h"
@@ -232,7 +233,7 @@ public:
 	reference back() { return *(--end()); }
 	reference back()const { return *(--end()); }
 
-	void swap(list<Tp, Alloc>& x) { std::swap(m_node, x.m_node); }
+	void swap(list<Tp, Alloc>& x) { stl::swap(m_node, x.m_node); }
 
 	iterator insert(iterator position, const Tp& x) {
 		node* tmp = create_node(x);
@@ -398,7 +399,7 @@ public:
 	void reverse() {
 		list_node_base* tmp = m_node;
 		do {
-			std::swap(tmp->m_next, tmp->m_prev);
+			stl::swap(tmp->m_next, tmp->m_prev);
 			tmp = tmp->m_prev;
 		} while (tmp != m_node);
 	}
