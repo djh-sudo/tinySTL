@@ -94,8 +94,8 @@ public:
 	inline bool empty()const { return begin() == end(); }
 	inline reference front() { return*begin(); }
 	inline const_reference front()const { return *begin(); }
-	inline reference back() { return *end(); }
-	inline const_reference back()const { return*end(); }
+	inline reference back() { return *(end() - 1); }
+	inline const_reference back()const { return*(end() - 1); }
 
 	inline void push_back(const Tp& x) {
 		if (m_finish != m_end_of_storage) {
@@ -183,7 +183,7 @@ public:
 			new_finish = uninitialized_copy(pos, m_finish, new_finish);
 			// free previous block
 			destroy(m_start, m_finish);
-			m_deallocator(m_start, m_end_of_storage);
+			m_deallocator(m_start, (size_t)(m_end_of_storage - m_start));
 			m_start = new_start;
 			m_finish = new_finish;
 			m_end_of_storage = m_start + len;
@@ -220,7 +220,7 @@ public:
 	// override
 	inline reference operator[](size_type n) { return *(begin() + n); }
 	inline const_reference operator[](size_type n)const { return *(begin() + n); }
-	vector& operator=(const vector<Tp, Alloc>&x) {
+	vector& operator=(const vector&x) {
 		if (&x == this) return*this;
 		const size_type len = x.size();
 		if (len > capacity()) {
@@ -368,7 +368,7 @@ template<typename Tp, typename Alloc>
 inline bool
 operator==(const vector<Tp, Alloc>& x, const vector<Tp, Alloc>& y) {
 	return x.size() == y.size() &&
-		   equal(x.begin(), x.end(), y.begin(), y.end());
+		   equal(x.begin(), x.end(), y.begin());
 }
 
 template<typename Tp, typename Alloc>
