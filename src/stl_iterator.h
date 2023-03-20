@@ -198,8 +198,8 @@ template<typename BiIter, typename Tp, typename Ref, typename Distance>
 inline bool operator!=(
 	const ReverseBidirectionalIter<BiIter, Tp, Ref, Distance>& x,
 	const ReverseBidirectionalIter<BiIter, Tp, Ref, Distance>& y
-	) { // ???
-	return x != y;
+	) {
+	return !(x == y);
 }
 
 // reverse random access iterator
@@ -216,7 +216,7 @@ public:
 
 	ReverseIter() = default;
 	explicit ReverseIter(RandomAccessIter x) :current(x) {}
-	ReverseIter base() const { return current; }
+	RandomAccessIter base() const { return current; }
 	Ref operator*()const { return *(current - 1); }
 	pointer operator->()const { return &(operator*()); }
 	Self& operator++() {
@@ -273,8 +273,14 @@ inline bool operator==(const ReverseIter<RandomAccessIter,Tp, Ref,Distance>&x,
 }
 
 template<typename RandomAccessIter, typename Tp, typename Ref, typename Distance>
-inline bool operator<(const ReverseIter<RandomAccessIter,Tp, Ref,Distance>&x,
-	                   const ReverseIter<RandomAccessIter, Tp, Ref, Distance>& y){
+inline bool operator!=(const ReverseIter<RandomAccessIter, Tp, Ref, Distance>& x,
+	                   const ReverseIter<RandomAccessIter, Tp, Ref, Distance>& y) {
+	return !(x == y);
+}
+
+template<typename RandomAccessIter, typename Tp, typename Ref, typename Distance>
+inline bool operator<(const ReverseIter<RandomAccessIter, Tp, Ref, Distance>&x,
+	                  const ReverseIter<RandomAccessIter, Tp, Ref, Distance>& y){
 	return y.base() < x.base();
 }
 
