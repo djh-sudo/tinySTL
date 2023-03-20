@@ -47,8 +47,8 @@ inline char* uninitialized_copy(const char* first, const char* last,
 }
 
 inline int* uninitialized_copy(const int* first, const int* last,
-	                            int* result) {
-	::memmove(result, first, (size_t)(last - first));
+	                           int* result) {
+	::memmove(result, first, (size_t)(last - first) * sizeof(int));
 	return result + (last - first);
 }
 
