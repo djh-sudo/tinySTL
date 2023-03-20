@@ -102,6 +102,7 @@ struct RB_Tree_Iterator :public RB_Tree_Base_Iterator {
 	RB_Tree_Iterator(const iterator& it) { m_node = it.m_node; }
 
 	inline reference operator*() const { return (link_type(m_node))->m_val; }
+	pointer operator->()const { return &(operator*()); }
 	inline Self& operator++() { increment(); return *this; }
 	inline Self operator++(int) {
 		Self tmp = *this;
@@ -633,15 +634,16 @@ public:
 	}
 
 	inline void erase(iterator pos) {
-		link_type y = rebalence_for_erase(pos.m_node, 
-			                              m_header->m_parent,
-			                              m_header->m_left,
-			                              m_parent->m_right);
+		link_type y = (link_type) 
+			rebalence_for_erase(pos.m_node,
+			                    m_header->m_parent,
+			                    m_header->m_left,
+			                    m_header->m_right);
 		destroy_node(y);
 		--m_node_count;
 	}
 	void erase(iterator first, iterator last) {
-		if (first == begin() && last == end)
+		if (first == begin() && last == end())
 			clear();
 		else {
 			while (first != last) erase(first++);

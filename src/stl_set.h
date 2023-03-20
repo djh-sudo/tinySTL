@@ -105,6 +105,9 @@ public:
 		return m_rbt.upper_bound(x);}
 	inline pair<iterator, iterator>equal_range(const key_type& x) {
 		return m_rbt.equal_range(x);}
+	inline pair<const_iterator, const_iterator>equal_range(const key_type& x)const {
+		return m_rbt.equal_range(x);
+	}
 };
 
 // compare
