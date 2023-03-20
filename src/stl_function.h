@@ -55,5 +55,11 @@ template<typename Tp>
 struct less :public binary_function<Tp, Tp, bool> {
 	inline bool operator()(const Tp& x, const Tp& y)const { return x < y; }
 };
+
+template<typename Tp>
+struct greater :public binary_function<Tp, Tp, bool> {
+	inline bool operator()(const Tp& x, const Tp& y)const { return x > y; }
+};
+
 NAMESPACE_END // STL_FUNCTION_H
 #endif
