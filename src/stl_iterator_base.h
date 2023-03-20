@@ -147,6 +147,7 @@ inline ptrdiff_t* distance_type(const Tp*) {
 // distance 
 template<typename InputIterator, typename Distance>
 inline void distance(InputIterator first, InputIterator last, Distance& n, input_iterator_tag) {
+	n = 0;
 	while (first != last) {
 		++first;
 		++n;
@@ -158,6 +159,7 @@ inline void distance(RandomAccessIterator first,
 	                 RandomAccessIterator last,
 	                 Distance& n,
 	                 random_access_iterator_tag) {
+	n = 0;
 	n += (last - first); // O(1)
 }
 
