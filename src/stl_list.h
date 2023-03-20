@@ -384,7 +384,7 @@ public:
 		iterator last2 = x.end();
 		while (first1 != last1 && first2 != last2) {
 			// must override operator<()
-			if (*first1 < *first2) {
+			if (*first2 < *first1) {
 				iterator next = first2;
 				transfer(first1, first2, ++next);
 				first2 = next;
