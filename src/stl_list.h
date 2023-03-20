@@ -29,13 +29,13 @@ struct list_iterator_base {
 	list_iterator_base() = default;
 	list_iterator_base(list_node_base* x) :m_node(x) {}
 
-	void increase() { m_node = m_node->m_next; }
+	inline void increase() { m_node = m_node->m_next; }
 
-	void decrease() { m_node = m_node->m_prev; }
+	inline void decrease() { m_node = m_node->m_prev; }
 
-	bool operator==(const list_iterator_base& x) const { return m_node == x.m_node; }
+	inline bool operator==(const list_iterator_base& x) const { return m_node == x.m_node; }
 
-	bool operator!=(const list_iterator_base& x) const { return m_node != x.m_node; }
+	inline bool operator!=(const list_iterator_base& x) const { return m_node != x.m_node; }
 };
 
 // list iterator
@@ -60,23 +60,23 @@ struct list_iterator :public list_iterator_base {
 
 	pointer operator->()const { return &(operator*()); }
 
-	Self& operator++() {
+	inline Self& operator++() {
 		this->increase();
 		return*this;
 	}
 
-	Self operator++(int) {
+	inline Self operator++(int) {
 		Self tmp = *this;
 		this->increase();
 		return tmp;
 	}
 
-	Self& operator--() {
+	inline Self& operator--() {
 		this->decrease();
 		return *this;
 	}
 
-	Self operator--(int) {
+	inline Self operator--(int) {
 		Self tmp = *this;
 		this->decrease();
 		return tmp;
@@ -100,7 +100,7 @@ class list_base {
 
 public:
 	typedef Alloc allocator_type;
-	allocator_type get_allocator()const {return allocator_type(); }
+	inline allocator_type get_allocator()const {return allocator_type(); }
 
 	list_base(const allocator_type&) {
 		m_node = get_node();
@@ -196,46 +196,46 @@ public:
 
 	~list() = default;
 
-	node* create_node(const Tp& x) {
+	inline node* create_node(const Tp& x) {
 		node* p = get_node();
 		Construct(&p->m_data, x);
 		return p;
 	}
-	node* create_node() {
+	inline node* create_node() {
 		node* p = get_node();
 		Construct(p->m_data);
 		return p;
 	}
-	iterator begin() { return (node*)(m_node->m_next); }
-	const_iterator begin()const { return(node*) m_node->m_next; }
+	inline iterator begin() { return (node*)(m_node->m_next); }
+	inline const_iterator begin()const { return(node*) m_node->m_next; }
 	
-	iterator end() { return m_node; }
-	const_iterator end() const { return m_node; }
+	inline iterator end() { return m_node; }
+	inline const_iterator end() const { return m_node; }
 	
-	reverse_iterator rbegin() { return reverse_iterator(end()); }
-	const_reverse_iterator rbegin()const { return const_reverse_iterator(end()); }
+	inline reverse_iterator rbegin() { return reverse_iterator(end()); }
+	inline const_reverse_iterator rbegin()const { return const_reverse_iterator(end()); }
 
-	reverse_iterator rend() { return reverse_iterator(begin()); }
-	const_reverse_iterator rend()const { return const_reverse_iterator(begin()); }
+	inline reverse_iterator rend() { return reverse_iterator(begin()); }
+	inline const_reverse_iterator rend()const { return const_reverse_iterator(begin()); }
 
-	bool empty()const { return m_node->m_next == m_node; }
+	inline bool empty()const { return m_node->m_next == m_node; }
 
-	size_type size()const {
+	inline size_type size()const {
 		size_type result = 0;
 		distance(begin(), end(), result);
 		return result;
 	}
 
-	size_type max_size()const { return size_type(-1); }
+	inline size_type max_size()const { return size_type(-1); }
 
-	reference front() { return *begin(); }
-	const_reference front() const { return *begin(); }
-	reference back() { return *(--end()); }
-	reference back()const { return *(--end()); }
+	inline reference front() { return *begin(); }
+	inline const_reference front() const { return *begin(); }
+	inline reference back() { return *(--end()); }
+	inline reference back()const { return *(--end()); }
 
-	void swap(list<Tp, Alloc>& x) { stl::swap(m_node, x.m_node); }
+	inline void swap(list<Tp, Alloc>& x) { stl::swap(m_node, x.m_node); }
 
-	iterator insert(iterator position, const Tp& x) {
+	inline iterator insert(iterator position, const Tp& x) {
 		node* tmp = create_node(x);
 		tmp->m_next = position.m_node;
 		tmp->m_prev = position.m_node->m_prev;
@@ -244,7 +244,7 @@ public:
 		return tmp;
 	}
 
-	iterator insert(iterator position) { return insert(position, Tp()); }
+	inline iterator insert(iterator position) { return insert(position, Tp()); }
 
 	void insert(iterator pos, const_iterator first, const_iterator last) {
 		for (; first != last; ++first) {
@@ -258,18 +258,18 @@ public:
 		}
 	}
 
-	void insert(iterator pos, size_type n, const Tp& x) {
+	inline void insert(iterator pos, size_type n, const Tp& x) {
 		return fill_insert(pos, n, x);}
 
-	void push_front(const Tp& x) { insert(begin(), x); }
+	inline void push_front(const Tp& x) { insert(begin(), x); }
 
-	void push_front() { insert(begin()); }
+	inline void push_front() { insert(begin()); }
 
-	void push_back(const Tp&x) {insert(end(),x); }
+	inline void push_back(const Tp&x) {insert(end(),x); }
 
-	void push_back() { insert(end()); }
+	inline void push_back() { insert(end()); }
 
-	iterator erase(iterator pos) {
+	inline iterator erase(iterator pos) {
 		list_node_base* next_node = pos.m_node->m_next;
 		list_node_base* prev_node = pos.m_node->m_prev;
 		node* n = (node*)pos.m_node;
@@ -287,7 +287,7 @@ public:
 		return last;
 	}
 
-	void clear() { Base::clear(); }
+	inline void clear() { Base::clear(); }
 
 	void resize(size_type new_size, const Tp& x) {
 		iterator it = begin();
@@ -299,11 +299,11 @@ public:
 		else insert(end(), new_size - len, x);
 	}
 
-	void resize(size_type new_size) { this->resize(new_size, Tp()); }
+	inline void resize(size_type new_size) { this->resize(new_size, Tp()); }
 
-	void pop_front() { erase(begin()); }
+	inline void pop_front() { erase(begin()); }
 
-	void pop_back() { erase(--end()); }
+	inline void pop_back() { erase(--end()); }
 
 protected:
 	void fill_insert(iterator pos, size_type n, const Tp & x) {
@@ -319,10 +319,11 @@ protected:
 	}
 
 public:
-	void assign(size_type n, const Tp& value) { return fill_assign(n, value); }
-
+	inline void assign(size_type n, const Tp& value) { return fill_assign(n, value); }
+	template<typename InputIter>
+	
 protected:
-	void transfer(iterator pos, iterator first, iterator last) {
+	inline void transfer(iterator pos, iterator first, iterator last) {
 		// Ctrl+X the [first, last) in front of the pos
 		// Remove [first, last)
 		if (pos == last) return;
@@ -336,21 +337,21 @@ protected:
 		first.m_node->m_prev = tmp;
 	}
 public:
-	void splice(iterator pos, list& x) {
+	inline void splice(iterator pos, list& x) {
 		// Ctrl + X the x in front of the pos
 		if (!x.empty()) {
 			this->transfer(pos, x.begin(), x.end());
 		}
 	}
 
-	void splice(iterator pos, iterator it) {
+	inline void splice(iterator pos, iterator it) {
 		iterator j = it;
 		++j;
 		if (pos == it || pos == j) return;
 		this->transfer(pos, it, j);
 	}
 
-	void splice(iterator pos, iterator first, iterator last) {
+	inline void splice(iterator pos, iterator first, iterator last) {
 		if (first != last) this->transfer(pos, first, last);
 	}
 
