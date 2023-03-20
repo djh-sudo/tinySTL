@@ -2,7 +2,6 @@
 #define LIST_TEST_H
 
 #include <cassert>
-#include "../src/stl_alloc.h"
 #include "../src/stl_list.h"
 
 using namespace stl;
