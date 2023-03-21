@@ -98,7 +98,7 @@ public:
 	}
 
 	// insert and erase
-	inline pair<iterator, bool>insert(const value_type& x) {
+	inline iterator insert(const value_type& x) {
 		return m_rbt.insert_equal(x);
 	}
 	inline iterator insert(iterator pos, const value_type& x) {
@@ -123,7 +123,7 @@ public:
 
 	inline iterator find(const key_type& x) { return m_rbt.find(x); }
 	inline const_iterator find(const key_type& x)const { return m_rbt.find(x); }
-	inline size_type count(key_type& x)const { return m_rbt.find(x) == m_rbt.end() ? 0 : 1; }
+	inline size_type count(const key_type& x)const { return m_rbt.count(x); }
 
 	inline iterator lower_bound(const key_type& x) { return m_rbt.lower_bound(x); }
 	inline const_iterator lower_bound(const key_type& x) const { return m_rbt.lower_bound(x); }

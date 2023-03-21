@@ -118,7 +118,7 @@ public:
 
 	inline iterator find(const key_type& x) { return m_rbt.find(x); }
 	inline const_iterator find(const key_type& x)const { return m_rbt.find(x); }
-	inline size_type count(key_type& x)const { return m_rbt.find(x) == m_rbt.end() ? 0 : 1; }
+	inline size_type count(const key_type& x)const { return m_rbt.find(x) == m_rbt.end() ? 0 : 1; }
 
 	inline iterator lower_bound(const key_type& x)  { return m_rbt.lower_bound(x); }
 	inline const_iterator lower_bound(const key_type& x) const { return m_rbt.lower_bound(x); }
