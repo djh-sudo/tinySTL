@@ -161,35 +161,35 @@ public:
 	unordered_multiset(size_type n, const hasher& hf, key_equal& eq) :m_ht(n, hf, eq, allocator_type()) {}
 	// other construction
 	unordered_multiset(const value_type* first, const value_type* last) :m_ht(100, hasher(), key_equal(), allocator_type()) {
-		m_ht.insert_unique(first, last);
+		m_ht.insert_equal(first, last);
 	}
 	unordered_multiset(const value_type* first, const value_type* last, size_type n)
 		:m_ht(n, hasher(), key_equal(), allocator_type()) {
-		m_ht.insert_unique(first, last);
+		m_ht.insert_equal(first, last);
 	}
 	unordered_multiset(const value_type* first, const value_type* last, size_type n, const hasher& hf)
 		:m_ht(n, hf, key_equal(), allocator_type()) {
-		m_ht.insert_unique(first, last);
+		m_ht.insert_equal(first, last);
 	}
 	unordered_multiset(const value_type* first, const value_type* last, size_type n, const hasher& hf, key_equal& eq)
 		:m_ht(n, hf, eq, allocator_type()) {
-		m_ht.insert_unique(first, last);
+		m_ht.insert_equal(first, last);
 	}
 	// iterator initialize
 	unordered_multiset(const_iterator first, const_iterator last) :m_ht(100, hasher(), key_equal(), allocator_type()) {
-		m_ht.insert_unique(first, last);
+		m_ht.insert_equal(first, last);
 	}
 	unordered_multiset(const_iterator first, const_iterator last, size_type n)
 		:m_ht(n, hasher(), key_equal(), allocator_type()) {
-		m_ht.insert_unique(first, last);
+		m_ht.insert_equal(first, last);
 	}
 	unordered_multiset(const_iterator first, const_iterator last, size_type n, const hasher& hf)
 		:m_ht(n, hf, key_equal(), allocator_type()) {
-		m_ht.insert_unique(first, last);
+		m_ht.insert_equal(first, last);
 	}
 	unordered_multiset(const_iterator first, const_iterator last, size_type n, const hasher& hf, key_equal& eq)
 		:m_ht(n, hf, eq, allocator_type()) {
-		m_ht.insert_unique(first, last);
+		m_ht.insert_equal(first, last);
 	}
 public:
 	inline size_type size()const { return m_ht.size(); }
@@ -200,22 +200,20 @@ public:
 	iterator begin()const { return m_ht.begin(); }
 	iterator end()const { return m_ht.end(); }
 public:
-	pair<iterator, bool>insert(const value_type& obj) {
-		pair<typename Ht::iterator, bool>p = m_ht.insert_unique(obj);
-		return pair<iterator, bool>(p.first, p.second);
+	iterator insert(const value_type& obj) {
+		return m_ht.insert_equal(obj);
 	}
 
 	void insert(const value_type* first, const value_type* last) {
-		m_ht.insert_unique(first, last);
+		m_ht.insert_equal(first, last);
 	}
 
 	void insert(const_iterator first, const_iterator last) {
-		m_ht.insert_unique(first, last);
+		m_ht.insert_equal(first, last);
 	}
 
-	pair<iterator, bool>insert_noresize(const value_type& obj) {
-		pair<typename Ht::iterator, bool>p = m_ht.insert_unique_noresize(obj);
-		return pair<iterator, bool>(p.first, p.second);
+	iterator insert_noresize(const value_type& obj) {
+		return m_ht.insert_equal_noresize();
 	}
 
 	iterator find(const key_type& key)const {
