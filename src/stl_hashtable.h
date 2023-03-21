@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <algorithm>
 #include "stl_config.h"
+#include "stl_function.h"
 #include "stl_hash_fun.h"
 #include "stl_construct.h"
 #include "stl_vector.h"
@@ -23,9 +24,12 @@ template<typename Val, typename Key, typename HashFun, typename ExtractKey, type
 class hashtable;
 
 template<typename Val, typename Key, typename HashFun, typename ExtractKey, typename EqualKey, typename Alloc = alloc>
-struct hashtable_const_iterator;
+struct hashtable_iterator;
 
 template<typename Val, typename Key, typename HashFun, typename ExtractKey, typename EqualKey, typename Alloc = alloc>
+struct hashtable_const_iterator;
+
+template<typename Val, typename Key, typename HashFun, typename ExtractKey, typename EqualKey, typename Alloc>
 struct hashtable_iterator {
 	typedef hashtable<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>                Hashtable;
 	typedef hashtable_iterator<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>       iterator;
@@ -35,8 +39,8 @@ struct hashtable_iterator {
 	typedef Val                  value_type;
 	typedef ptrdiff_t            difference_type;
 	typedef size_t               size_type;
-	typedef Val& reference;
-	typedef Val* pointer;
+	typedef Val&                 reference;
+	typedef Val*                 pointer;
 
 	// API
 	hashtable_iterator(Node* n, Hashtable* ht) :m_cur(n), m_ht(ht) {}
@@ -83,15 +87,15 @@ struct hashtable_const_iterator {
 
 	// API
 	hashtable_const_iterator() = default;
-	hashtable_const_iterator(const Node* n, Hashtable* ht) :m_cur(n), m_ht(ht) {}
-	hashtable_const_iterator(hashtable_const_iterator& x) :m_cur(x.m_cur), m_ht(x.m_ht) {}
+	hashtable_const_iterator(const Node* n, const Hashtable* ht) :m_cur(n), m_ht(ht) {}
+	hashtable_const_iterator(const iterator& x) :m_cur(x.m_cur), m_ht(x.m_ht) {}
 	// override operator
 	inline reference operator*()const { return m_cur->m_val; }
 	inline pointer operator->()const { return &(operator*()); }
 	const_iterator& operator++() {
 		const Node* old = m_cur;
 		m_cur = m_cur->m_next;
-		if (m_cur != nullptr) {
+		if (m_cur == nullptr) {
 			size_type bucket = m_ht->bucket_num(old->m_val);
 			while (!m_cur && ++bucket < m_ht->size()) {
 				m_cur = m_ht->m_buckets[bucket];
@@ -104,11 +108,11 @@ struct hashtable_const_iterator {
 		++* this;
 		return tmp;
 	}
-	inline bool operator==(const_iterator& it) const { return m_cur == it.m_cur; }
-	inline bool operator!=(const_iterator& it)const { return m_cur != it.m_cur; }
+	inline bool operator==(const const_iterator& it) const { return m_cur == it.m_cur; }
+	inline bool operator!=(const const_iterator& it)const { return m_cur != it.m_cur; }
 	// data
-	Node* m_cur;
-	Hashtable* m_ht;
+	const Node* m_cur;
+	const Hashtable* m_ht;
 };
 
 template<typename Val, typename Key, typename HashFun, typename ExtractKey, typename EqualKey, typename Alloc>
@@ -125,6 +129,25 @@ value_type(const hashtable_iterator<Val, Key, HashFun, ExtractKey, EqualKey, All
 template<typename Val, typename Key, typename HashFun, typename ExtractKey, typename EqualKey, typename Alloc>
 inline typename hashtable<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>::difference_type*
 distance_type(const hashtable_iterator<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>&) {
+	return (typename hashtable<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>::difference_type*) nullptr;
+}
+
+// const_iterator
+template<typename Val, typename Key, typename HashFun, typename ExtractKey, typename EqualKey, typename Alloc>
+inline forward_iterator_tag
+iterator_category(const hashtable_const_iterator<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>&) {
+	return forward_iterator_tag();
+}
+
+template<typename Val, typename Key, typename HashFun, typename ExtractKey, typename EqualKey, typename Alloc>
+inline Val*
+value_type(const hashtable_const_iterator<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>&) {
+	return (Val*)nullptr;
+}
+
+template<typename Val, typename Key, typename HashFun, typename ExtractKey, typename EqualKey, typename Alloc>
+inline typename hashtable<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>::difference_type*
+distance_type(const hashtable_const_iterator<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>&) {
 	return (typename hashtable<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>::difference_type*) nullptr;
 }
 
@@ -145,6 +168,7 @@ inline unsigned long next_prime(unsigned long n) {
 	const unsigned long* pos = std::lower_bound(first, last, n);
 	return pos == last ? *(last - 1) : *pos;
 }
+
 template<typename Val, typename Key, typename HashFun,
 	     typename ExtractKey, typename EqualKey, typename Alloc>
 class hashtable {
@@ -198,9 +222,9 @@ public:
 		:m_hash(hf), m_equal(eql), m_get_key(ExtractKey()), m_buckets(a), m_num_ele(0) {
 		initialize_buckets(n);
 	}
-	hashtable(const hashtable& x)
+	explicit hashtable(const hashtable& x)
 		:m_hash(x.m_hash),m_equal(x.m_equal),
-		m_get_key(x.m_get_key),m_num_ele(x.m_num_ele),
+		m_get_key(x.m_get_key),
 		m_buckets(x.get_allocator()),m_num_ele(0) {
 		copy_from(x);
 	}
@@ -238,7 +262,8 @@ public:
 	inline iterator end() { return iterator(nullptr, this); }
 	
 	const_iterator begin()const {
-		for (size_type n = 0; n < m_buckets; ++n) {
+		size_t length = m_buckets.size();
+		for (size_type n = 0; n < length; ++n) {
 			if (m_buckets[n]) return const_iterator(m_buckets[n], this);
 		}
 		return end();
@@ -251,6 +276,9 @@ public:
 	const_iterator rbegin()const = delete;
 	const_iterator rend()const = delete;
 
+	// operator
+	friend bool operator==<>(const hashtable&, const hashtable&);
+public:
 	inline size_type bucket_count()const { return m_buckets.size(); }
 	inline size_type max_bucket_count()const { return prime_list[(size_type)PRIMES_NUMBER - 1]; }
 
@@ -327,7 +355,7 @@ public:
 					if (m_buckets[m] != nullptr)
 						return pii(const_iterator(first, this), const_iterator(m_buckets[m], this));
 				}
-				return pii(const_iterator(first, this), const_iterator(end(), this));
+				return pii(const_iterator(first, this), end());
 			}
 		}
 		return pii(end(), end());
@@ -370,7 +398,7 @@ public:
 	// insert
 	inline iterator insert_equal(const value_type& obj) {
 		resize(m_num_ele + 1);
-		return insert_equal_norsize(obj);
+		return insert_equal_noresize(obj);
 	}
 	void insert_unique(const value_type* first, const value_type* last) {
 		size_type n = last - first;
@@ -393,7 +421,7 @@ public:
 		size_type n = last - first;
 		resize(m_num_ele + n);
 		for (; n > 0; --n, ++first) {
-			insert_equal_norsize(*first);
+			insert_equal_noresize(*first);
 		}
 	}
 	
@@ -402,7 +430,7 @@ public:
 		distance(first, last, 0);
 		resize(m_num_ele + n);
 		for (; n > 0; --n, ++first) {
-			insert_equal_norsize(*first);
+			insert_equal_noresize(*first);
 		}
 	}
 
@@ -464,7 +492,11 @@ public:
 		}
 	}
 
-	void erase(const iterator first, const iterator last) {
+	inline void erase(const const_iterator& it) {
+		erase(iterator(const_cast<Node*>(it.m_cur), const_cast<hashtable*>(it.m_ht)));
+	}
+
+	void erase(iterator first, iterator last) {
 		if (first.m_cur == last.m_cur) return;
 		size_type fb = first.m_cur ? bucket_num(first.m_cur->m_val) : m_buckets.size();
 		size_type lb = last.m_cur ? bucket_num(last.m_cur->m_val) : m_buckets.size();
@@ -478,6 +510,11 @@ public:
 				erase_bucket(lb, last.m_cur);
 			}
 		}
+	}
+
+	inline void erase(const_iterator first, const_iterator last) {
+		erase(iterator(const_cast<Node*>(first.m_cur), const_cast<hashtable*>(first.m_ht)),
+			  iterator(const_cast<Node*>(last.m_cur), const_cast<hashtable*>(last.m_ht)));
 	}
 
 	void clear(){
@@ -558,7 +595,7 @@ private:
 				m_buckets[i] = copy;
 				// slow path
 				for (Node* next = cur->m_next; next != nullptr; cur = next, next = cur->m_next) {
-					copy->m_next = new_node(next->val);
+					copy->m_next = new_node(next->m_val);
 					copy = copy->m_next;
 				}
 				copy->m_next = nullptr;
@@ -581,7 +618,7 @@ private:
 		return pair<iterator, bool>(iterator(tmp, this), true);
 	}
 	
-	iterator insert_equal_norsize(const value_type& obj) {
+	iterator insert_equal_noresize(const value_type& obj) {
 		const size_type n = bucket_num(obj);
 		Node* first = m_buckets[n];
 		for (Node* cur = first; cur; cur = cur->m_next) {
@@ -608,6 +645,10 @@ private:
 	vector<Node*, Alloc> m_buckets;
 	size_type m_num_ele;
 };
+
+template<typename Val, typename Key, typename HashFun,
+	typename ExtractKey, typename EqualKey, typename Alloc>
+class hashtable;
 // override operator
 template<typename Val, typename Key, typename HashFun,
 	     typename ExtractKey, typename EqualKey, typename Alloc>
@@ -627,9 +668,9 @@ bool operator==(const hashtable<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>&
 }
 
 template<typename Val, typename Key, typename HashFun,
-	typename ExtractKey, typename EqualKey, typename Alloc>
+	     typename ExtractKey, typename EqualKey, typename Alloc>
 inline bool operator!=(const hashtable<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>& h1,
-	            const hashtable<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>& h2) {
+	                   const hashtable<Val, Key, HashFun, ExtractKey, EqualKey, Alloc>& h2) {
 	return !(h1 == h2);
 }
 
