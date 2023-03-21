@@ -238,7 +238,7 @@ template<typename InputIter1, typename InputIter2, typename BinaryPre>
 inline bool equal(InputIter1 first1, InputIter1 last1, 
 	              InputIter2 first2, BinaryPre predicate) {
 	for (; first1 != last1; ++first1, ++first2) {
-		if (!predicate(*first1, first2))return false;
+		if (!predicate(*first1, *first2))return false;
 	}
 	return true;
 }

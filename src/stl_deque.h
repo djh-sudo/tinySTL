@@ -235,6 +235,7 @@ protected:
 	using Base::deallocate_node;
 	using Base::allocate_map;
 	using Base::deallocate_map;
+	using Base::destroy_node;
 
 public:
 	deque() :Base(0) {}
@@ -469,7 +470,7 @@ protected:
 		for (map_pointer cur = m_start.m_node; cur < m_finish.m_node; ++cur) {
 			uninitialized_fill(*cur, *cur + buffer_size(), value);
 		}
-		uninitialized_fill(m_finish.first, m_finish.cur, value);
+		uninitialized_fill(m_finish.m_first, m_finish.m_cur, value);
 	}
 	
 	inline void push_back_aux(const value_type& x) {
@@ -642,8 +643,8 @@ protected:
 				copy_backward(pos, finish_n, old_finish);
 				fill(pos, pos + difference_type(n), x);
 			}else{
-				iterator it = fill(m_finish, pos + n, x);
-				uninitialized_copy(pos, m_finish, it);
+				uninitialized_fill(m_finish, pos + n, x);
+				uninitialized_copy(pos, m_finish, pos + n);
 				m_finish = new_finish;
 				fill(pos, old_finish, x);
 			}
@@ -763,7 +764,7 @@ protected:
 		size_type new_nodes = (new_ele + buffer_size() - 1) / buffer_size();
 		reserve_map_at_back(new_nodes);
 		for (size_type i = 1; i <= new_nodes; ++i) {
-			*(m_finish + i) = allocate_node();
+			*(m_finish.m_node + i) = allocate_node();
 		}
 	}
 
@@ -773,7 +774,7 @@ template<typename Tp, typename Alloc>
 inline bool operator==(const deque<Tp, Alloc>& x,
 	                   const deque<Tp, Alloc>& y) {
 	return x.size() == y.size() && 
-		   equal(x.begin(), x.end(), y.begin(), y.end());
+		   equal(x.begin(), x.end(), y.begin());
 }
 
 template<typename Tp, typename Alloc>
