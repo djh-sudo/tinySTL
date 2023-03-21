@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="deque_test.h" />
     <ClInclude Include="heap_test.h" />
     <ClInclude Include="list_test.h" />
     <ClInclude Include="map_test.h" />

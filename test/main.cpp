@@ -3,7 +3,7 @@
 #include "set_test.h"
 #include "heap_test.h"
 #include "map_test.h"
-
+#include "deque_test.h"
 
 int main() {
 	ListTest::run();
@@ -11,5 +11,6 @@ int main() {
 	SetTest::run();
 	HeapTest::run();
 	MapTest::run();
+	DequeTest::run();
 	return 0;
 }
