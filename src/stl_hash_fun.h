@@ -31,5 +31,8 @@ struct hash<int> { inline size_t operator()(int x)const { return (size_t)x; } };
 template<>
 struct hash<long> { inline size_t operator()(long x)const { return (size_t)x; } };
 
+template<>
+struct hash<size_t> { inline size_t operator()(size_t x)const { return (size_t)x; } };
+
 NAMESPACE_END
 #endif // STL_HASH_FUN_H
