@@ -112,6 +112,8 @@ public:
 	inline void erase(iterator it) { m_ht.erase(it); }
 	inline void erase(iterator first, iterator last) { m_ht.erase(first, last); }
 
+	inline void clear() { m_ht.clear(); }
+
 	inline void resize(size_type n) { m_ht.resize(n); }
 	inline size_type bucket_count()const { return m_ht.bucket_count(); }
 	inline size_type max_bucket_count()const { return m_ht.max_bucket_count(); }
@@ -235,6 +237,8 @@ public:
 	inline size_type erase(const key_type& key) { return m_ht.erase(key); }
 	inline void erase(iterator it) { m_ht.erase(it); }
 	inline void erase(iterator first, iterator last) { m_ht.erase(first, last); }
+
+	inline void clear() { m_ht.clear(); }
 
 	inline void resize(size_type n) { m_ht.resize(n); }
 	inline size_type bucket_count()const { return m_ht.bucket_count(); }
