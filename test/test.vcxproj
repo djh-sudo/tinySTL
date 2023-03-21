@@ -132,6 +132,7 @@
     <ClInclude Include="list_test.h" />
     <ClInclude Include="map_test.h" />
     <ClInclude Include="set_test.h" />
+    <ClInclude Include="unordered_test.h" />
     <ClInclude Include="vector_test.h" />
   </ItemGroup>
   <ItemGroup>

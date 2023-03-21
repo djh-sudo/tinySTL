@@ -4,6 +4,7 @@
 #include "heap_test.h"
 #include "map_test.h"
 #include "deque_test.h"
+#include "unordered_test.h"
 
 int main() {
 	ListTest::run();
@@ -12,5 +13,6 @@ int main() {
 	HeapTest::run();
 	MapTest::run();
 	DequeTest::run();
+	UnorderedTest::run();
 	return 0;
 }
