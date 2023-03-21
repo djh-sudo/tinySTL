@@ -10,10 +10,10 @@
 
 NAMESPACE_START
 
-template<typename Key, typename Tp, typename HashFun=hash<Key>,
-	     typename EqualKey=equal_to<Key>,
-	     typename Alloc=alloc>
-class hash_map {
+template<typename Key, typename Tp, typename HashFun = hash<Key>,
+	typename EqualKey = equal_to<Key>,
+	typename Alloc = alloc>
+class unordered_map {
 
 private:
 	typedef hashtable<pair<const Key, Tp>, Key, HashFun, Select1st<pair<const Key, Tp>>, EqualKey, Alloc> Ht;
@@ -40,45 +40,45 @@ public:
 	inline hasher hash_func()const { return m_ht.hash_fun(); }
 	inline key_equal key_eq()const { return m_ht.key_eq(); }
 	inline allocator_type get_allocator()const { return m_ht.get_allocator(); }
-	friend bool operator==(const hash_map&, const hash_map&);
-	friend bool operator!=(const hash_map&, const hash_map&);
+	friend bool operator==<>(const unordered_map&, const unordered_map&);
+	friend bool operator!=<>(const unordered_map&, const unordered_map&);
 
 public:
-	hash_map() :m_ht(100, hasher(), key_equal(), allocator_type()) {}
-	explicit hash_map(size_type n) :m_ht(n, hasher(), key_equal(), allocator_type()) {}
-	hash_map(size_type n, const hasher&hf):m_ht(n, hf, key_equal(), allocator_type()) {}
-	hash_map(size_type n, const hasher& hf, const key_equal& eq) :m_ht(n, hf, eq, allocator_type()) {}
+	unordered_map() :m_ht(100, hasher(), key_equal(), allocator_type()) {}
+	explicit unordered_map(size_type n) :m_ht(n, hasher(), key_equal(), allocator_type()) {}
+	unordered_map(size_type n, const hasher&hf):m_ht(n, hf, key_equal(), allocator_type()) {}
+	unordered_map(size_type n, const hasher& hf, const key_equal& eq) :m_ht(n, hf, eq, allocator_type()) {}
 	// other construction
-	hash_map(size_type* first, size_type* last) 
+	unordered_map(size_type* first, size_type* last) 
 		:m_ht(100, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_map(size_type* first, size_type* last, size_type n)
+	unordered_map(size_type* first, size_type* last, size_type n)
 		:m_ht(n, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_map(size_type* first, size_type* last, size_type n, hasher&hf)
+	unordered_map(size_type* first, size_type* last, size_type n, hasher&hf)
 		:m_ht(n, hf, key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_map(size_type* first, size_type* last, size_type n, hasher& hf, key_equal&eq)
+	unordered_map(size_type* first, size_type* last, size_type n, hasher& hf, key_equal&eq)
 		:m_ht(n, hf, eq, allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
 	// construct with iterator
-	hash_map(const_iterator first, const_iterator last)
+	unordered_map(const_iterator first, const_iterator last)
 		:m_ht(100, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_map(const_iterator first, const_iterator last, size_type n)
+	unordered_map(const_iterator first, const_iterator last, size_type n)
 		:m_ht(n, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_map(const_iterator first, const_iterator last, size_type n, hasher& hf)
+	unordered_map(const_iterator first, const_iterator last, size_type n, hasher& hf)
 		:m_ht(n, hf, key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_map(const_iterator first, const_iterator last, size_type n, hasher& hf, key_equal& eq)
+	unordered_map(const_iterator first, const_iterator last, size_type n, hasher& hf, key_equal& eq)
 		:m_ht(n, hf, eq, allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
@@ -86,7 +86,7 @@ public:
 	inline size_type size()const { return m_ht.size(); }
 	inline size_type max_size()const { return m_ht.max_size(); }
 	inline bool empty()const { return m_ht.empty(); }
-	inline void swap(hash_map& hp) { m_ht.swap(hp.m_ht); }
+	inline void swap(const unordered_map& hp) { m_ht.swap(hp.m_ht); }
 	// iterator
 	inline iterator begin() { return m_ht.begin(); }
 	inline iterator end() { return m_ht.end(); }
@@ -119,21 +119,21 @@ public:
 };
 // overload operator
 template<typename Key, typename Tp, typename HashFun, typename EqualKey, typename Alloc>
-inline bool operator==(const hash_map<Key, Tp, HashFun, EqualKey, Alloc>&x,
-	                   const hash_map<Key, Tp, HashFun, EqualKey, Alloc>&y){
+inline bool operator==(const unordered_map<Key, Tp, HashFun, EqualKey, Alloc>&x,
+	                   const unordered_map<Key, Tp, HashFun, EqualKey, Alloc>&y){
 	return x.m_ht == y.m_ht;
 }
 
 template<typename Key, typename Tp, typename HashFun, typename EqualKey, typename Alloc>
-inline bool operator!=(const hash_map<Key, Tp, HashFun, EqualKey, Alloc>& x,
-	const hash_map<Key, Tp, HashFun, EqualKey, Alloc>& y) {
+inline bool operator!=(const unordered_map<Key, Tp, HashFun, EqualKey, Alloc>& x,
+	                   const unordered_map<Key, Tp, HashFun, EqualKey, Alloc>& y) {
 	return x.m_ht != y.m_ht;
 }
 
 // multimap
 template<typename Key, typename Tp, typename HashFun=hash<Key>, 
 	     typename EqualKey=equal_to<Key>, typename Alloc=alloc>
-class hash_multimap {
+class unordered_multimap {
 private:
 	typedef hashtable<pair<const Key, Tp>, Key, HashFun, Select1st<pair<const Key, Tp>>, EqualKey, Alloc> Ht;
 	Ht m_ht;
@@ -159,45 +159,45 @@ public:
 	inline hasher hash_func()const { return m_ht.hash_fun(); }
 	inline key_equal key_eq()const { return m_ht.key_eq(); }
 	inline allocator_type get_allocator()const { return m_ht.get_allocator(); }
-	friend bool operator==(const hash_multimap&, const hash_multimap&);
-	friend bool operator!=(const hash_multimap&, const hash_multimap&);
+	friend bool operator==<>(const unordered_multimap&, const unordered_multimap&);
+	friend bool operator!=<>(const unordered_multimap&, const unordered_multimap&);
 
 public:
-	hash_multimap() :m_ht(100, hasher(), key_equal(), allocator_type()) {}
-	explicit hash_multimap(size_type n) :m_ht(n, hasher(), key_equal(), allocator_type()) {}
-	hash_multimap(size_type n, const hasher& hf) :m_ht(n, hf, key_equal(), allocator_type()) {}
-	hash_multimap(size_type n, const hasher& hf, const key_equal& eq) :m_ht(n, hf, eq, allocator_type()) {}
+	unordered_multimap() :m_ht(100, hasher(), key_equal(), allocator_type()) {}
+	explicit unordered_multimap(size_type n) :m_ht(n, hasher(), key_equal(), allocator_type()) {}
+	unordered_multimap(size_type n, const hasher& hf) :m_ht(n, hf, key_equal(), allocator_type()) {}
+	unordered_multimap(size_type n, const hasher& hf, const key_equal& eq) :m_ht(n, hf, eq, allocator_type()) {}
 	// other construction
-	hash_multimap(size_type* first, size_type* last)
+	unordered_multimap(size_type* first, size_type* last)
 		:m_ht(100, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_equal(first, last);
 	}
-	hash_multimap(size_type* first, size_type* last, size_type n)
+	unordered_multimap(size_type* first, size_type* last, size_type n)
 		:m_ht(n, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_equal(first, last);
 	}
-	hash_multimap(size_type* first, size_type* last, size_type n, hasher& hf)
+	unordered_multimap(size_type* first, size_type* last, size_type n, hasher& hf)
 		:m_ht(n, hf, key_equal(), allocator_type()) {
 		m_ht.insert_equal(first, last);
 	}
-	hash_multimap(size_type* first, size_type* last, size_type n, hasher& hf, key_equal& eq)
+	unordered_multimap(size_type* first, size_type* last, size_type n, hasher& hf, key_equal& eq)
 		:m_ht(n, hf, eq, allocator_type()) {
 		m_ht.insert_equal(first, last);
 	}
 	// construct with iterator
-	hash_multimap(const_iterator first, const_iterator last)
+	unordered_multimap(const_iterator first, const_iterator last)
 		:m_ht(100, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_equal(first, last);
 	}
-	hash_multimap(const_iterator first, const_iterator last, size_type n)
+	unordered_multimap(const_iterator first, const_iterator last, size_type n)
 		:m_ht(n, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_equal(first, last);
 	}
-	hash_multimap(const_iterator first, const_iterator last, size_type n, hasher& hf)
+	unordered_multimap(const_iterator first, const_iterator last, size_type n, hasher& hf)
 		:m_ht(n, hf, key_equal(), allocator_type()) {
 		m_ht.insert_equal(first, last);
 	}
-	hash_multimap(const_iterator first, const_iterator last, size_type n, hasher& hf, key_equal& eq)
+	unordered_multimap(const_iterator first, const_iterator last, size_type n, hasher& hf, key_equal& eq)
 		:m_ht(n, hf, eq, allocator_type()) {
 		m_ht.insert_equal(first, last);
 	}
@@ -205,7 +205,7 @@ public:
 	inline size_type size()const { return m_ht.size(); }
 	inline size_type max_size()const { return m_ht.max_size(); }
 	inline bool empty()const { return m_ht.empty(); }
-	inline void swap(hash_multimap& hp) { m_ht.swap(hp.m_ht); }
+	inline void swap(unordered_multimap& hp) { m_ht.swap(hp.m_ht); }
 	// iterator
 	inline iterator begin() { return m_ht.begin(); }
 	inline iterator end() { return m_ht.end(); }
@@ -243,13 +243,13 @@ public:
 };
 // override operator
 template<typename Key, typename Tp, typename HashFun, typename EqualKey, typename Alloc>
-inline bool operator==(const hash_multimap<Key, Tp, HashFun, EqualKey, Alloc>& x,
-	                   const hash_multimap<Key, Tp, HashFun, EqualKey, Alloc>& y) {
+inline bool operator==(const unordered_multimap<Key, Tp, HashFun, EqualKey, Alloc>& x,
+	                   const unordered_multimap<Key, Tp, HashFun, EqualKey, Alloc>& y) {
 	return x.m_ht == y.m_ht;
 }
 template<typename Key, typename Tp, typename HashFun, typename EqualKey, typename Alloc>
-inline bool operator!=(const hash_multimap<Key, Tp, HashFun, EqualKey, Alloc>& x,
-	                   const hash_multimap<Key, Tp, HashFun, EqualKey, Alloc>& y) {
+inline bool operator!=(const unordered_multimap<Key, Tp, HashFun, EqualKey, Alloc>& x,
+	                   const unordered_multimap<Key, Tp, HashFun, EqualKey, Alloc>& y) {
 	return !(x.m_ht == y.m_ht);
 }
 NAMESPACE_END

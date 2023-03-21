@@ -9,7 +9,7 @@ NAMESPACE_START
 
 template<typename Val, typename HashFunc=hash<Val>,
 	     typename EqualKey=equal_to<Val>,typename Alloc=alloc>
-class hash_set {
+class unordered_set {
 private:
 	typedef hashtable<Val, Val, HashFunc, Identity<Val>, EqualKey, Alloc>Ht;
 	Ht m_ht;
@@ -32,43 +32,43 @@ public:
 	hasher hash_func()const { return m_ht.hash_fun(); }
 	key_equal key_eq()const { return m_ht.key_eq(); }
 	allocator_type get_allocator()const { return m_ht.get_allocator(); }
-	friend bool operator==(const hash_set&, const hash_set&);
-	friend bool operator!=(const hash_set&, const hash_set&);
+	friend bool operator==<>(const unordered_set&, const unordered_set&);
+	friend bool operator!=<>(const unordered_set&, const unordered_set&);
 
 public:
-	hash_set() :m_ht(100, hasher(), key_equal(), allocator_type()) {}
-	explicit hash_set(size_type n) :m_ht(n, hasher(), key_equal(), allocator_type()) {}
-	hash_set(size_type n, const hasher& hf) :m_ht(n, hf, key_equal(), allocator_type()) {}
-	hash_set(size_type n, const hasher& hf, key_equal&eq) :m_ht(n, hf, eq, allocator_type()) {}
+	unordered_set() :m_ht(100, hasher(), key_equal(), allocator_type()) {}
+	explicit unordered_set(size_type n) :m_ht(n, hasher(), key_equal(), allocator_type()) {}
+	unordered_set(size_type n, const hasher& hf) :m_ht(n, hf, key_equal(), allocator_type()) {}
+	unordered_set(size_type n, const hasher& hf, key_equal&eq) :m_ht(n, hf, eq, allocator_type()) {}
 	// other construction
-	hash_set(const value_type* first, const value_type* last):m_ht(100,hasher(), key_equal(),allocator_type()) {
+	unordered_set(const value_type* first, const value_type* last):m_ht(100,hasher(), key_equal(),allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_set(const value_type* first, const value_type* last, size_type n) 
+	unordered_set(const value_type* first, const value_type* last, size_type n) 
 		:m_ht(n, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_set(const value_type* first, const value_type* last, size_type n, const hasher&hf)
+	unordered_set(const value_type* first, const value_type* last, size_type n, const hasher&hf)
 		:m_ht(n, hf, key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_set(const value_type* first, const value_type* last, size_type n, const hasher& hf, key_equal&eq)
+	unordered_set(const value_type* first, const value_type* last, size_type n, const hasher& hf, key_equal&eq)
 		:m_ht(n, hf, eq, allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
 	// iterator initialize
-	hash_set(const_iterator first, const_iterator last) :m_ht(100, hasher(), key_equal(), allocator_type()) {
+	unordered_set(const_iterator first, const_iterator last) :m_ht(100, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_set(const_iterator first, const_iterator last, size_type n)
+	unordered_set(const_iterator first, const_iterator last, size_type n)
 		:m_ht(n, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_set(const_iterator first, const_iterator last, size_type n, const hasher& hf)
+	unordered_set(const_iterator first, const_iterator last, size_type n, const hasher& hf)
 		:m_ht(n, hf, key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_set(const_iterator first, const_iterator last, size_type n, const hasher& hf, key_equal& eq)
+	unordered_set(const_iterator first, const_iterator last, size_type n, const hasher& hf, key_equal& eq)
 		:m_ht(n, hf, eq, allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
@@ -76,7 +76,7 @@ public:
 	inline size_type size()const { return m_ht.size(); }
 	inline size_type max_size()const { return m_ht.max_size(); }
 	inline bool empty()const { return m_ht.empty(); }
-	inline void swap(hash_set& h) { m_ht.swap(h.m_ht); }
+	inline void swap(unordered_set& h) { m_ht.swap(h.m_ht); }
 
 	iterator begin()const { return m_ht.begin(); }
 	iterator end()const { return m_ht.end(); }
@@ -115,20 +115,20 @@ public:
 };
 // overload operator
 template<typename Val, typename HashFunc, typename EqualKey, typename Alloc>
-bool operator==(const hash_set<Val, HashFunc, EqualKey, Alloc>&x,
-	            const hash_set<Val, HashFunc, EqualKey, Alloc>&y){
+bool operator==(const unordered_set<Val, HashFunc, EqualKey, Alloc>&x,
+	            const unordered_set<Val, HashFunc, EqualKey, Alloc>&y){
 	return x.m_ht == y.m_ht;}
 
 template<typename Val, typename HashFunc, typename EqualKey, typename Alloc>
-bool operator!=(const hash_set<Val, HashFunc, EqualKey, Alloc>& x,
-	const hash_set<Val, HashFunc, EqualKey, Alloc>& y) {
+bool operator!=(const unordered_set<Val, HashFunc, EqualKey, Alloc>& x,
+	            const unordered_set<Val, HashFunc, EqualKey, Alloc>& y) {
 	return !(x.m_ht == y.m_ht);
 }
 
 // multi-set
 template<typename Val, typename HashFunc = hash<Val>,
 	typename EqualKey = equal_to<Val>, typename Alloc = alloc>
-class hash_multiset {
+class unordered_multiset {
 private:
 	typedef hashtable<Val, Val, HashFunc, Identity<Val>, EqualKey, Alloc>Ht;
 	Ht m_ht;
@@ -151,43 +151,43 @@ public:
 	hasher hash_func()const { return m_ht.hash_fun(); }
 	key_equal key_eq()const { return m_ht.key_eq(); }
 	allocator_type get_allocator()const { return m_ht.get_allocator(); }
-	friend bool operator==(const hash_multiset&, const hash_multiset&);
-	friend bool operator!=(const hash_multiset&, const hash_multiset&);
+	friend bool operator==<>(const unordered_multiset&, const unordered_multiset&);
+	friend bool operator!=<>(const unordered_multiset&, const unordered_multiset&);
 
 public:
-	hash_multiset() :m_ht(100, hasher(), key_equal(), allocator_type()) {}
-	explicit hash_multiset(size_type n) :m_ht(n, hasher(), key_equal(), allocator_type()) {}
-	hash_multiset(size_type n, const hasher& hf) :m_ht(n, hf, key_equal(), allocator_type()) {}
-	hash_multiset(size_type n, const hasher& hf, key_equal& eq) :m_ht(n, hf, eq, allocator_type()) {}
+	unordered_multiset() :m_ht(100, hasher(), key_equal(), allocator_type()) {}
+	explicit unordered_multiset(size_type n) :m_ht(n, hasher(), key_equal(), allocator_type()) {}
+	unordered_multiset(size_type n, const hasher& hf) :m_ht(n, hf, key_equal(), allocator_type()) {}
+	unordered_multiset(size_type n, const hasher& hf, key_equal& eq) :m_ht(n, hf, eq, allocator_type()) {}
 	// other construction
-	hash_multiset(const value_type* first, const value_type* last) :m_ht(100, hasher(), key_equal(), allocator_type()) {
+	unordered_multiset(const value_type* first, const value_type* last) :m_ht(100, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_multiset(const value_type* first, const value_type* last, size_type n)
+	unordered_multiset(const value_type* first, const value_type* last, size_type n)
 		:m_ht(n, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_multiset(const value_type* first, const value_type* last, size_type n, const hasher& hf)
+	unordered_multiset(const value_type* first, const value_type* last, size_type n, const hasher& hf)
 		:m_ht(n, hf, key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_multiset(const value_type* first, const value_type* last, size_type n, const hasher& hf, key_equal& eq)
+	unordered_multiset(const value_type* first, const value_type* last, size_type n, const hasher& hf, key_equal& eq)
 		:m_ht(n, hf, eq, allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
 	// iterator initialize
-	hash_multiset(const_iterator first, const_iterator last) :m_ht(100, hasher(), key_equal(), allocator_type()) {
+	unordered_multiset(const_iterator first, const_iterator last) :m_ht(100, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_multiset(const_iterator first, const_iterator last, size_type n)
+	unordered_multiset(const_iterator first, const_iterator last, size_type n)
 		:m_ht(n, hasher(), key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_multiset(const_iterator first, const_iterator last, size_type n, const hasher& hf)
+	unordered_multiset(const_iterator first, const_iterator last, size_type n, const hasher& hf)
 		:m_ht(n, hf, key_equal(), allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
-	hash_multiset(const_iterator first, const_iterator last, size_type n, const hasher& hf, key_equal& eq)
+	unordered_multiset(const_iterator first, const_iterator last, size_type n, const hasher& hf, key_equal& eq)
 		:m_ht(n, hf, eq, allocator_type()) {
 		m_ht.insert_unique(first, last);
 	}
@@ -195,7 +195,7 @@ public:
 	inline size_type size()const { return m_ht.size(); }
 	inline size_type max_size()const { return m_ht.max_size(); }
 	inline bool empty()const { return m_ht.empty(); }
-	inline void swap(hash_multiset& h) { m_ht.swap(h.m_ht); }
+	inline void swap(unordered_multiset& h) { m_ht.swap(h.m_ht); }
 
 	iterator begin()const { return m_ht.begin(); }
 	iterator end()const { return m_ht.end(); }
@@ -239,14 +239,14 @@ public:
 };
 // overload operator
 template<typename Val, typename HashFunc, typename EqualKey, typename Alloc>
-bool operator==(const hash_multiset<Val, HashFunc, EqualKey, Alloc>& x,
-	            const hash_multiset<Val, HashFunc, EqualKey, Alloc>& y) {
+bool operator==(const unordered_multiset<Val, HashFunc, EqualKey, Alloc>& x,
+	            const unordered_multiset<Val, HashFunc, EqualKey, Alloc>& y) {
 	return x.m_ht == y.m_ht;
 }
 
 template<typename Val, typename HashFunc, typename EqualKey, typename Alloc>
-bool operator!=(const hash_multiset<Val, HashFunc, EqualKey, Alloc>& x,
-	            const hash_multiset<Val, HashFunc, EqualKey, Alloc>& y) {
+bool operator!=(const unordered_multiset<Val, HashFunc, EqualKey, Alloc>& x,
+	            const unordered_multiset<Val, HashFunc, EqualKey, Alloc>& y) {
 	return !(x.m_ht == y.m_ht);
 }
 NAMESPACE_END
