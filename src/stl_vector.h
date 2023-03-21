@@ -64,16 +64,16 @@ public:
 public:
 	explicit vector(const allocator_type& a = allocator_type()) :Base(a) {}
 	vector(size_type n, const Tp& value, const allocator_type& a = allocator_type()) :Base(n, a) {
-		m_finish = uninitialized_fill_n(m_start, n, value);
+		m_finish = stl::uninitialized_fill_n(m_start, n, value);
 	}
 	explicit vector(size_type n) :Base(n, allocator_type()) {
-		m_finish = uninitialized_fill_n(m_start, n, Tp());
+		m_finish = stl::uninitialized_fill_n(m_start, n, Tp());
 	}
 	vector(const vector<Tp, Alloc>& x):Base(x.size(), x.get_allocator()) {
-		m_finish = uninitialized_copy(x.begin(), x.end(), m_start);
+		m_finish = stl::uninitialized_copy(x.begin(), x.end(), m_start);
 	}
 	vector(const Tp* first, const Tp* last, const allocator_type& a = allocator_type()) :Base(last - first, a) {
-		m_finish = uninitialized_copy(first, last, m_start);
+		m_finish = stl::uninitialized_copy(first, last, m_start);
 	}
 
 	~vector() { 
@@ -159,17 +159,17 @@ public:
 			const size_type ele_after = size_type(m_finish - pos);
 			iterator old = m_finish;
 			if (ele_after > n) {
-				uninitialized_copy(m_finish - n, m_finish, m_finish);
+				stl::uninitialized_copy(m_finish - n, m_finish, m_finish);
 				m_finish += n;
-				copy_backward(pos, old - n, old);
-				copy(first, last, pos);
+				stl::copy_backward(pos, old - n, old);
+				stl::copy(first, last, pos);
 			}
 			else {
-				uninitialized_copy(first + ele_after, last, m_finish);
+				stl::uninitialized_copy(first + ele_after, last, m_finish);
 				m_finish += (n - ele_after);
-				uninitialized_copy(pos, old, m_finish);
+				stl::uninitialized_copy(pos, old, m_finish);
 				m_finish += ele_after;
-				copy(first, first + ele_after, pos);
+				stl::copy(first, first + ele_after, pos);
 			}
 		}
 		else {
@@ -178,9 +178,9 @@ public:
 			iterator new_start = m_allocator(len);
 			iterator new_finish = new_start;
 			// copy and insert
-			new_finish = uninitialized_copy(m_start, pos, new_start);
-			new_finish = uninitialized_copy(first, last, new_finish);
-			new_finish = uninitialized_copy(pos, m_finish, new_finish);
+			new_finish = stl::uninitialized_copy(m_start, pos, new_start);
+			new_finish = stl::uninitialized_copy(first, last, new_finish);
+			new_finish = stl::uninitialized_copy(pos, m_finish, new_finish);
 			// free previous block
 			destroy(m_start, m_finish);
 			m_deallocator(m_start, (size_t)(m_end_of_storage - m_start));
@@ -195,14 +195,14 @@ public:
 
 	iterator erase(iterator pos) {
 		if (pos + 1 != end()) {
-			copy(pos + 1, m_finish, pos);
+			stl::copy(pos + 1, m_finish, pos);
 		}
 		--m_finish;
 		destroy(m_finish);
 		return pos;
 	}
 	iterator erase(iterator first, iterator last) {
-		iterator it = copy(last, m_finish, first);
+		iterator it = stl::copy(last, m_finish, first);
 		destroy(it, m_finish);
 		m_finish = m_finish - (last - first);
 		return first;
@@ -238,8 +238,8 @@ public:
 		}
 		else {
 			// len > size() && len < capacity
-			copy(x.begin(), x.begin() + size(), m_start);
-			uninitialized_copy(x.begin() + size(), x.end(), m_finish);
+			stl::copy(x.begin(), x.begin() + size(), m_start);
+			stl::uninitialized_copy(x.begin() + size(), x.end(), m_finish);
 		}
 		m_finish = m_start + len;
 		return*this;
@@ -259,7 +259,7 @@ public:
 protected:
 	iterator allocate_and_copy(size_type n, const_iterator first, const_iterator last) {
 		iterator result = m_allocator(n);
-		uninitialized_copy(first, last, result);
+		stl::uninitialized_copy(first, last, result);
 		return result;
 	}
 	void fill_assign(size_type n, const Tp& value) {
@@ -269,7 +269,7 @@ protected:
 		}
 		else if (n > size()) {
 			fill(begin(), end(), value);
-			m_finish = uninitialized_fill_n(m_finish, n - size(), value);
+			m_finish = stl::uninitialized_fill_n(m_finish, n - size(), value);
 		}
 		else {
 			// n < size()
@@ -281,18 +281,18 @@ protected:
 			construct(m_finish, *(m_finish - 1));
 			++m_finish;
 			Tp val_copy = value;
-			copy_backward(pos, m_finish - 2, m_finish - 1);
+			stl::copy_backward(pos, m_finish - 2, m_finish - 1);
 			*pos = val_copy;
 		}
 		else {
 			const size_type old = size();
 			const size_type len = old != 0 ? (old << 1) : 1;
 			iterator start = m_allocator(len);
-			iterator finish = uninitialized_copy(m_start, pos, start);
+			iterator finish = stl::uninitialized_copy(m_start, pos, start);
 			// insert
 			construct(finish, value);
 			++finish;
-			finish = uninitialized_copy(pos, m_finish, finish);
+			finish = stl::uninitialized_copy(pos, m_finish, finish);
 			// free
 			destroy(begin(), end());
 			m_deallocator(m_start, m_end_of_storage - m_start);
@@ -305,18 +305,18 @@ protected:
 		if (m_finish != m_end_of_storage) {
 			construct(m_finish, *(m_finish - 1));
 			++m_finish;
-			copy_backward(pos, m_finish - 2, m_finish - 1);
+			stl::copy_backward(pos, m_finish - 2, m_finish - 1);
 			*pos = Tp();
 		}
 		else {
 			const size_type old = size();
 			const size_type len = old != 0 ? (old << 1) : 1;
 			iterator start = m_allocator(len);
-			iterator finish = uninitialized_copy(m_start, pos, start);
+			iterator finish = stl::uninitialized_copy(m_start, pos, start);
 			// insert
 			construct(finish);
 			++finish;
-			finish = uninitialized_copy(pos, m_finish, finish);
+			finish = stl::uninitialized_copy(pos, m_finish, finish);
 			// free
 			destroy(begin(), end());
 			m_deallocator(m_start, m_end_of_storage - m_start);
@@ -331,15 +331,15 @@ protected:
 			const size_type ele_after = size_type(m_finish - pos);
 			iterator old = m_finish;
 			if (ele_after > n) {
-				uninitialized_copy(m_finish - n, m_finish, m_finish);
+				stl::uninitialized_copy(m_finish - n, m_finish, m_finish);
 				m_finish += n;
-				copy_backward(pos, old - n, old);
+				stl::copy_backward(pos, old - n, old);
 				fill(pos, pos + n, x);
 			}
 			else {
-				uninitialized_fill_n(m_finish, n - ele_after, x);
+				stl::uninitialized_fill_n(m_finish, n - ele_after, x);
 				m_finish += (n - ele_after);
-				uninitialized_copy(pos, old, m_finish);
+				stl::uninitialized_copy(pos, old, m_finish);
 				m_finish += ele_after;
 				fill(pos, old, x);
 			}
@@ -350,9 +350,9 @@ protected:
 			iterator new_start = m_allocator(len);
 			iterator new_finish = new_start;
 			// start copy and fill
-			new_finish = uninitialized_copy(m_start, pos, new_start);
-			new_finish = uninitialized_fill_n(new_finish, n, x);
-			new_finish = uninitialized_copy(pos, m_finish, new_finish);
+			new_finish = stl::uninitialized_copy(m_start, pos, new_start);
+			new_finish = stl::uninitialized_fill_n(new_finish, n, x);
+			new_finish = stl::uninitialized_copy(pos, m_finish, new_finish);
 			// free the previous block
 			destroy(m_start, m_finish);
 			m_deallocator(m_start, (size_type)(m_end_of_storage - m_start));
