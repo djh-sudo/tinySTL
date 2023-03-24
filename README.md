@@ -33,7 +33,7 @@ void function(A a, B b){/* */}       // 3
 	std::cout << s[0] << std::endl;
 ```
 这段代码在`debug`下会触发`assert`；但是在`release`下可以编译通过。
-当然这段代码本身违反了`use after free`，实际程序不可能这么写。但是一方面说明了`clear`函数的本质（只修改指针，并未擦除内存）；也说明了`release`模式性能比`debug`好的原因，没有过多的`assert`。
+当然这段代码本身违反了`use after free`，实际程序不可能这么写。但是一方面说明了`clear`函数的本质（只修改指针，并未擦除内存）；也说明了`release`模式性能比`debug`好的原因**之一**，没有过多的`assert`检查。
 
 (ii) 对比结果
 例如以`vector`的插入为例（这是插入中最坏的情况），代码如下：
@@ -62,7 +62,7 @@ void function(A a, B b){/* */}       // 3
 这里明显看出`copy_backword`的中指针的逐个赋值占据了大部分时间，特化版本的`::memmove`显然对于连续内存移动更快。
 
 ## Reference
-* 《`STL`源码剖析》，侯捷
+* [《`STL`源码剖析》，侯捷](http://221.235.153.107:90/resource/book/C++%E8%BF%9B%E9%98%B6/C++%20STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90.pdf)
 * [`STL`源代码](https://github.com/steveLauwh/SGI-STL)
 * 测试代码选择[`STL port`](http://www.stlport.org/download.html)
 * [`RB Tree`](http://wujiantao.github.io/2014/02/20/rb_tree2.html)
